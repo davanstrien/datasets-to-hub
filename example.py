@@ -89,7 +89,7 @@ def prepare_dataset(
     if hub_id:
         logger.info(f"Pushing dataset to hub {hub_id}")
         dataset.push_to_hub(hub_id, private=private_repo)
-        metadata_update(hub_id, {"tags": "pdf"})
+        metadata_update(hub_id, {"tags": "pdf"}, create_pr=True)
     return dataset
 
 
