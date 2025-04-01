@@ -16,7 +16,7 @@ import PIL
 from logging import getLogger
 from typing import Optional
 from datasets import Features, Sequence, Image, Value
-
+from huggingface_hub import metadata_update
 logger = getLogger(__name__)
 
 features = Features(
@@ -89,12 +89,7 @@ def prepare_dataset(
     if hub_id:
         logger.info(f"Pushing dataset to hub {hub_id}")
         dataset.push_to_hub(hub_id, private=private_repo)
-        card = DatasetCard.load(hub_id)
-        print(card)
-        if not card.data.tags:
-            card.data.tags = []
-        card.data.tags.append("pdf")
-        card.push()
+        metadata_update(hub_id, {"tags": "pdf"})
     return dataset
 
 
