@@ -7,6 +7,7 @@
 # ]
 # ///
 
+from huggingface_hub import DatasetCard
 from pathlib import Path
 from argparse import ArgumentParser
 from datasets import load_dataset
@@ -88,6 +89,11 @@ def prepare_dataset(
     if hub_id:
         logger.info(f"Pushing dataset to hub {hub_id}")
         dataset.push_to_hub(hub_id, private=private_repo)
+        card = DatasetCard.load(hub_id)
+        if not card.data.tags:
+            card.data.tags = []
+        card.data.tags.append("pdf")
+        card.push()
     return dataset
 
 
