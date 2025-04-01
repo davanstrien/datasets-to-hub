@@ -1,11 +1,12 @@
 # /// script
-# requires-python = ">=3.8"
+# requires-python = ">=3.11"
 # dependencies = [
 #     "datasets",
 #     "pdfplumber",
 #     "pillow",
 # ]
 # ///
+
 
 from pathlib import Path
 from argparse import ArgumentParser
@@ -15,6 +16,7 @@ import PIL
 from logging import getLogger
 from typing import Optional
 from datasets import Features, Sequence, Image, Value
+from huggingface_hub import metadata_update
 
 logger = getLogger(__name__)
 
@@ -31,7 +33,8 @@ def render(pdf):
     for page in pdf.pages:
         buffer = io.BytesIO()
         page.to_image(resolution=200).save(buffer)
-        images.append(PIL.Image.open(buffer))
+        image = PIL.Image.open(buffer)
+        images.append(image)
 
     return images
 
@@ -86,7 +89,8 @@ def prepare_dataset(
     logger.info("Dataset preparation completed")
     if hub_id:
         logger.info(f"Pushing dataset to hub {hub_id}")
-        dataset.push_to_hub(hub_id, private=private_repo, embed_external_files=True)
+        dataset.push_to_hub(hub_id, private=private_repo)
+        metadata_update(hub_id, {"tags": "pdf"})
     return dataset
 
 

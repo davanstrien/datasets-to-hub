@@ -7,7 +7,7 @@
 # ]
 # ///
 
-from huggingface_hub import DatasetCard
+
 from pathlib import Path
 from argparse import ArgumentParser
 from datasets import load_dataset
