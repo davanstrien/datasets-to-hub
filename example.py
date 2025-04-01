@@ -90,6 +90,7 @@ def prepare_dataset(
         logger.info(f"Pushing dataset to hub {hub_id}")
         dataset.push_to_hub(hub_id, private=private_repo)
         card = DatasetCard.load(hub_id)
+        print(card)
         if not card.data.tags:
             card.data.tags = []
         card.data.tags.append("pdf")
